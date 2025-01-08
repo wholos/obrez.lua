@@ -1,1 +1,2 @@
 # obrez.lua
+Private script
