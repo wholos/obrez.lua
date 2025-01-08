@@ -1,0 +1,29 @@
+script_author('holos')
+script_version('v1')
+
+local memory = require('memory')
+
+local pt = 2
+local worked = {26}
+
+function main()
+    while not isSampAvailable() do wait(0) end
+    while true do
+        wait(0)
+        if getAmmoInClip() == pt then
+            local gun = getCurrentCharWeapon(PLAYER_PED)
+            for key, val in pairs(worked) do
+                if val == gun and getAmmoInCharWeapon(PLAYER_PED, gun) ~= pt then
+                    setCurrentCharWeapon(PLAYER_PED, 0)
+                    sampForceOnfootSync()
+                    wait(200)
+                    setCurrentCharWeapon(PLAYER_PED, gun)
+                end
+            end
+        end
+    end
+end
+
+function getAmmoInClip()
+    return memory.getuint32(getCharPointer(PLAYER_PED) + 0x5A0 + getWeapontypeSlot(getCurrentCharWeapon(PLAYER_PED)) * 0x1C + 0x8)
+end
